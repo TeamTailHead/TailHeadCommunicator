@@ -1,5 +1,6 @@
 import { connect } from "net";
 
+import { buildFrame } from "./frame";
 import NodeMultipleSocket from "./NodeMultipleSocket";
 
 const PORT = 5250;
@@ -38,7 +39,7 @@ describe("NodeMultipleSocket", () => {
   test("should receive data from single client", (done) => {
     server.start(PORT).then(() => {
       const client = connect({ port: PORT }, () => {
-        client.write("hello");
+        client.write(buildFrame(Buffer.from("hello")));
         client.end();
         client.destroy();
       });
@@ -54,13 +55,13 @@ describe("NodeMultipleSocket", () => {
   test("should receive data from multiple clients", (done) => {
     server.start(PORT).then(() => {
       const client1 = connect({ port: PORT }, () => {
-        client1.write("hello");
+        client1.write(buildFrame(Buffer.from("hello")));
         client1.end();
         client1.destroy();
       });
 
       const client2 = connect({ port: PORT }, () => {
-        client2.write("world");
+        client2.write(buildFrame(Buffer.from("world")));
         client2.end();
         client2.destroy();
       });
@@ -107,7 +108,7 @@ describe("NodeMultipleSocket", () => {
         client.on("data", (data) => {
           client.destroy();
           done();
-          expect(data.toString()).toBe("hello");
+          expect(data.subarray(2).toString()).toBe("hello");
         });
       });
     });
@@ -126,7 +127,7 @@ describe("NodeMultipleSocket", () => {
         const client = connect({ port: PORT }, () => {
           client.on("data", (data) => {
             client.destroy();
-            received.push(data.toString());
+            received.push(data.subarray(2).toString());
 
             if (received.length === socketCount) {
               done();
@@ -148,17 +149,25 @@ describe("NodeMultipleSocket", () => {
     });
   });
 
-  // test("should receive by each chunk", (done) => {
-  //   server.start(PORT).then(() => {
-  //     const client = connect({ port: PORT }, () => {
-  //       client.end();
-  //       client.destroy();
-  //     });
-  //   });
+  test("should receive by frame", (done) => {
+    server.start(PORT).then(() => {
+      const client = connect({ port: PORT }, () => {
+        client.write(Buffer.concat([buildFrame(Buffer.from("hello")), buildFrame(Buffer.from("world"))]));
 
-  //   server.onConnect(() => {
-  //     server.sendAll(Buffer.from("hello"));
-  //     server.sendAll(Buffer.from("world"));
-  //   });
-  // });
+        client.end();
+        client.destroy();
+      });
+    });
+
+    const received: string[] = [];
+
+    server.onReceive((_id, data) => {
+      received.push(data.toString());
+
+      if (received.length === 2) {
+        done();
+        expect(received).toEqual(["hello", "world"]);
+      }
+    });
+  });
 });

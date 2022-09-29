@@ -1,29 +1,22 @@
 import { nanoid } from "nanoid";
 import { createServer, Server, Socket } from "net";
 
+import { buildFrame, FrameReader } from "./frame";
 import { MultipleSocket } from "./types";
 
 type DataReceiveCallback = (clientId: string, data: Buffer) => void;
 type DisconnectCallback = (clientId: string) => void;
 type ConnectCallback = (clientId: string) => void;
 
-const noopFunction = () => {
-  // do nothing
-};
-
 export default class NodeMultipleSocket implements MultipleSocket {
   private server: Server;
   private idToSocket = new Map<string, Socket>();
 
-  private receiveHandler: DataReceiveCallback;
-  private disconnectHandler: DisconnectCallback;
-  private connectHandler: ConnectCallback;
+  private receiveHandler: DataReceiveCallback | undefined;
+  private disconnectHandler: DisconnectCallback | undefined;
+  private connectHandler: ConnectCallback | undefined;
 
   constructor() {
-    this.receiveHandler = noopFunction;
-    this.disconnectHandler = noopFunction;
-    this.connectHandler = noopFunction;
-
     this.server = createServer();
     this.server.on("connection", (socket) => this.handleClientConnection(socket));
   }
@@ -35,13 +28,13 @@ export default class NodeMultipleSocket implements MultipleSocket {
   }
 
   sendAll(data: Buffer) {
-    this.idToSocket.forEach((socket) => socket.write(data));
+    this.idToSocket.forEach((socket) => socket.write(buildFrame(data)));
   }
 
   sendOne(id: string, data: Buffer) {
     const socket = this.idToSocket.get(id);
     if (socket) {
-      socket.write(data);
+      socket.write(buildFrame(data));
     }
   }
 
@@ -63,16 +56,22 @@ export default class NodeMultipleSocket implements MultipleSocket {
 
   private handleClientConnection(socket: Socket) {
     const id = nanoid();
+    const frameReader = new FrameReader();
+
     this.idToSocket.set(id, socket);
-    this.connectHandler(id);
+    this.connectHandler?.(id);
 
     socket.on("data", (data) => {
-      this.receiveHandler(id, data);
+      frameReader.push(data);
     });
 
     socket.on("close", () => {
-      this.disconnectHandler(id);
+      this.disconnectHandler?.(id);
       this.idToSocket.delete(id);
+    });
+
+    frameReader.onFrame((data) => {
+      this.receiveHandler?.(id, data);
     });
   }
 }
