@@ -1,13 +1,13 @@
 import { ClientMessage, ServerMessage } from "../message";
-import { MultipleSocket } from "../socket/types";
+import { SocketServer } from "../socket/types";
 import { HandlerFunction, ServerCommunicator } from "./types";
 
 export default class StringServerCommunicator implements ServerCommunicator {
-  private socket: MultipleSocket;
+  private socket: SocketServer;
 
   private handlers = new ClientMessageHandlerMap();
 
-  constructor(socket: MultipleSocket) {
+  constructor(socket: SocketServer) {
     this.socket = socket;
     this.socket.onReceive((clientId, data) => this.handleClientPakcet(clientId, data));
   }

@@ -1,14 +1,14 @@
 import { createServer, Server } from "net";
 
 import { buildFrame } from "./frame";
-import NodeSingleSocket from "./NodeSingleSocket";
+import NodeSocketClient from "./NodeSocketClient";
 
 const PORT = 5251;
 const HOST = "localhost";
 
 describe("NodeSingleSocket", () => {
   let server: Server;
-  let client: NodeSingleSocket;
+  let client: NodeSocketClient;
 
   beforeEach((done) => {
     server = createServer();
@@ -16,7 +16,7 @@ describe("NodeSingleSocket", () => {
       done();
     });
 
-    client = new NodeSingleSocket();
+    client = new NodeSocketClient();
   });
 
   afterEach(() => {

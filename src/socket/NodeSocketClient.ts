@@ -1,13 +1,13 @@
 import { Socket } from "net";
 
 import { buildFrame, FrameReader } from "./frame";
-import { SingleSocket } from "./types";
+import { SocketClient } from "./types";
 
 type ReceiveHandler = (data: Buffer) => void;
 type ConnectHandler = () => void;
 type DisconnectHandler = () => void;
 
-export default class NodeSingleSocket implements SingleSocket {
+export default class NodeSocketClient implements SocketClient {
   private socket: Socket;
   private reader: FrameReader;
 

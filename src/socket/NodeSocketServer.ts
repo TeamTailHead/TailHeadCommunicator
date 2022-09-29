@@ -2,13 +2,13 @@ import { nanoid } from "nanoid";
 import { createServer, Server, Socket } from "net";
 
 import { buildFrame, FrameReader } from "./frame";
-import { MultipleSocket } from "./types";
+import { SocketServer } from "./types";
 
 type DataReceiveCallback = (clientId: string, data: Buffer) => void;
 type DisconnectCallback = (clientId: string) => void;
 type ConnectCallback = (clientId: string) => void;
 
-export default class NodeMultipleSocket implements MultipleSocket {
+export default class NodeSocketServer implements SocketServer {
   private server: Server;
   private idToSocket = new Map<string, Socket>();
 

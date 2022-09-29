@@ -1,17 +1,17 @@
-import NodeMultipleSocket from "./NodeMultipleSocket";
-import NodeSingleSocket from "./NodeSingleSocket";
+import NodeSocketClient from "./NodeSocketClient";
+import NodeSocketServer from "./NodeSocketServer";
 
 const PORT = 5250;
 
 describe("Connection", () => {
-  let server: NodeMultipleSocket;
-  let client: NodeSingleSocket;
+  let server: NodeSocketServer;
+  let client: NodeSocketClient;
 
   beforeEach(() => {
-    server = new NodeMultipleSocket();
+    server = new NodeSocketServer();
     server.start(PORT);
 
-    client = new NodeSingleSocket();
+    client = new NodeSocketClient();
   });
 
   afterEach(() => {

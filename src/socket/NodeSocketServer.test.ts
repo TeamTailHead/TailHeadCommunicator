@@ -1,15 +1,15 @@
 import { connect } from "net";
 
 import { buildFrame } from "./frame";
-import NodeMultipleSocket from "./NodeMultipleSocket";
+import NodeSocketServer from "./NodeSocketServer";
 
 const PORT = 5250;
 
 describe("NodeMultipleSocket", () => {
-  let server: NodeMultipleSocket;
+  let server: NodeSocketServer;
 
   beforeEach(() => {
-    server = new NodeMultipleSocket();
+    server = new NodeSocketServer();
   });
 
   afterEach(() => {

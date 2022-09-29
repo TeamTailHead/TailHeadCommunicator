@@ -1,4 +1,4 @@
-export interface MultipleSocket {
+export interface SocketServer {
   start(port: number): Promise<void>;
   sendOne(id: string, data: Buffer): void;
   sendAll(data: Buffer): void;
@@ -8,7 +8,7 @@ export interface MultipleSocket {
   onDisconnect(handler: (id: string) => void): void;
 }
 
-export interface SingleSocket {
+export interface SocketClient {
   connect(host: string, port: number): Promise<void>;
   close(): void;
   send(data: Buffer): boolean;
