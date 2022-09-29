@@ -1,7 +1,13 @@
+import { ServerCommunicator } from "../communicator/types";
 import { ClientMessage, ServerMessage } from "../message";
-import { ServerCommunicator } from "./types";
 
 export default class BinaryServerCommunicator implements ServerCommunicator {
+  connect(_host: string, _port: string): void {
+    throw new Error("Method not implemented.");
+  }
+  disconnect(): void {
+    throw new Error("Method not implemented.");
+  }
   sendAll<K extends keyof ServerMessage>(_type: K, _data: ServerMessage[K]): void {
     throw new Error("Method not implemented.");
   }
