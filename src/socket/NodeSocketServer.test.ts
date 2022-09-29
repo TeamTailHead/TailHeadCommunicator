@@ -3,7 +3,7 @@ import { connect } from "net";
 import { buildFrame } from "./frame";
 import NodeSocketServer from "./NodeSocketServer";
 
-const PORT = 5250;
+const PORT = 5252;
 
 describe("NodeMultipleSocket", () => {
   let server: NodeSocketServer;
@@ -12,8 +12,8 @@ describe("NodeMultipleSocket", () => {
     server = new NodeSocketServer();
   });
 
-  afterEach(() => {
-    server.close();
+  afterEach(async () => {
+    await server.close();
   });
 
   test("should start properly", async () => {
@@ -56,14 +56,12 @@ describe("NodeMultipleSocket", () => {
     server.start(PORT).then(() => {
       const client1 = connect({ port: PORT }, () => {
         client1.write(buildFrame(Buffer.from("hello")));
-        client1.end();
-        client1.destroy();
-      });
-
-      const client2 = connect({ port: PORT }, () => {
-        client2.write(buildFrame(Buffer.from("world")));
-        client2.end();
-        client2.destroy();
+        client1.end(() => {
+          const client2 = connect({ port: PORT }, () => {
+            client2.write(buildFrame(Buffer.from("world")));
+            client2.end();
+          });
+        });
       });
     });
 

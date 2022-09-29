@@ -7,16 +7,15 @@ describe("Connection", () => {
   let server: NodeSocketServer;
   let client: NodeSocketClient;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     server = new NodeSocketServer();
-    server.start(PORT);
-
     client = new NodeSocketClient();
+    await server.start(PORT);
   });
 
-  afterEach(() => {
-    server.close();
-    client.close();
+  afterEach(async () => {
+    await client.close();
+    await server.close();
   });
 
   test("should send data from client", (done) => {
@@ -36,8 +35,10 @@ describe("Connection", () => {
       expect(data.toString()).toBe("hello world!");
     });
 
-    client.connect("localhost", PORT).then(() => {
+    server.onConnect(() => {
       server.sendAll(Buffer.from("hello world!"));
     });
+
+    client.connect("localhost", PORT);
   });
 });

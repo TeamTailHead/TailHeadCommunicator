@@ -27,6 +27,18 @@ export default class NodeSocketServer implements SocketServer {
     });
   }
 
+  close(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.server.close((err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  }
+
   sendAll(data: Buffer) {
     this.idToSocket.forEach((socket) => socket.write(buildFrame(data)));
   }
@@ -36,10 +48,6 @@ export default class NodeSocketServer implements SocketServer {
     if (socket) {
       socket.write(buildFrame(data));
     }
-  }
-
-  close(): void {
-    this.server.close();
   }
 
   onReceive(handler: DataReceiveCallback): void {
