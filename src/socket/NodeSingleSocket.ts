@@ -1,35 +1,39 @@
 import { Socket } from "net";
 
+import { buildFrame, FrameReader } from "./frame";
 import { SingleSocket } from "./types";
 
-const noopFunction = () => {
-  // do nothing
-};
+type ReceiveHandler = (data: Buffer) => void;
+type ConnectHandler = () => void;
+type DisconnectHandler = () => void;
 
 export default class NodeSingleSocket implements SingleSocket {
-  socket: Socket;
+  private socket: Socket;
+  private reader: FrameReader;
 
-  private receiveHandler: (data: Buffer) => void;
-  private connectHandler: () => void;
-  private disconnectHandler: () => void;
+  private receiveHandler: ReceiveHandler | undefined;
+  private connectHandler: ConnectHandler | undefined;
+  private disconnectHandler: DisconnectHandler | undefined;
 
   constructor() {
-    this.receiveHandler = noopFunction;
-    this.connectHandler = noopFunction;
-    this.disconnectHandler = noopFunction;
-
-    this.socket = new Socket({});
+    this.socket = new Socket();
 
     this.socket.on("connect", () => {
-      this.connectHandler();
+      this.connectHandler?.();
     });
 
     this.socket.on("data", (data) => {
-      this.receiveHandler(data);
+      this.reader.push(data);
     });
 
     this.socket.on("close", () => {
-      this.disconnectHandler();
+      this.disconnectHandler?.();
+    });
+
+    this.reader = new FrameReader();
+
+    this.reader.onFrame((data) => {
+      this.receiveHandler?.(data);
     });
   }
 
@@ -45,8 +49,12 @@ export default class NodeSingleSocket implements SingleSocket {
     });
   }
 
+  close(): void {
+    this.socket.destroy();
+  }
+
   send(data: Buffer): boolean {
-    return this.socket.write(data);
+    return this.socket.write(buildFrame(data));
   }
 
   onReceive(handler: (data: Buffer) => void): void {
