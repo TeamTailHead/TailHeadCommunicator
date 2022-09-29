@@ -1,14 +1,15 @@
 import { ClientMessage, ServerMessage } from "../message";
-import MultipleSocket from "./MultipleSocket";
+import { SocketServer } from "../socket/types";
 import { HandlerFunction, ServerCommunicator } from "./types";
 
 export default class StringServerCommunicator implements ServerCommunicator {
-  private socket: MultipleSocket;
+  private socket: SocketServer;
 
   private handlers = new ClientMessageHandlerMap();
 
-  constructor() {
-    this.socket = new MultipleSocket((clientId, data) => this.handleClientPakcet(clientId, data));
+  constructor(socket: SocketServer) {
+    this.socket = socket;
+    this.socket.onReceive((clientId, data) => this.handleClientPakcet(clientId, data));
   }
 
   //메서드 작성

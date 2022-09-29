@@ -6,19 +6,3 @@ export interface ServerCommunicator {
 }
 
 export type HandlerFunction<Data> = (clientKey: string, data: Data) => void;
-
-////////
-
-// function create():ServerCommunicator {
-
-// }
-
-// const com = create();
-// com.sendAll('joinError', {
-
-// })
-
-// com.receive('join', (clientKey, data) => {
-
-// })
-// type X = ServerMessage['lobbyInfo']
