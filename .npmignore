@@ -1,0 +1,8 @@
+node_modules
+src
+.vscode
+.husky
+.eslintrc.js
+.lintstagedrc.js
+.prettierrc
+jest.config.jsnpm 
