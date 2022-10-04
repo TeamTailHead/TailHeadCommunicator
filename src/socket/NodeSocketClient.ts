@@ -49,8 +49,10 @@ export default class NodeSocketClient implements SocketClient {
     });
   }
 
-  close(): void {
-    this.socket.destroy();
+  close(): Promise<void> {
+    return new Promise((resolve) => {
+      this.socket.end(resolve);
+    });
   }
 
   send(data: Buffer): boolean {

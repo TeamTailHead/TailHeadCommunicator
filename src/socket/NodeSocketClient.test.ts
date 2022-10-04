@@ -19,67 +19,68 @@ describe("NodeSingleSocket", () => {
     client = new NodeSocketClient();
   });
 
-  afterEach(() => {
-    server.close();
-    client.close();
+  afterEach((done) => {
+    client.close().then(() => {
+      server.close(done);
+    });
   });
 
   test("should connect properly", (done) => {
-    client.connect(HOST, PORT).then(() => {
-      server.on("connection", () => {
-        done();
-      });
+    server.on("connection", () => {
+      done();
     });
+
+    client.connect(HOST, PORT);
   });
 
   test("should send data", (done) => {
-    client.connect(HOST, PORT).then(() => {
-      server.on("connection", (socket) => {
-        client.send(Buffer.from("hello"));
-
-        socket.on("data", (data) => {
-          done();
-          expect(onlyFrameBody(data).toString()).toBe("hello");
-        });
+    server.on("connection", (socket) => {
+      socket.on("data", (data) => {
+        done();
+        expect(onlyFrameBody(data).toString()).toBe("hello");
       });
+
+      client.send(Buffer.from("hello"));
     });
+
+    client.connect(HOST, PORT);
   });
 
   test("should receive data", (done) => {
-    client.connect(HOST, PORT).then(() => {
-      server.on("connection", (socket) => {
-        socket.write(buildFrame(Buffer.from("hello")));
-
-        client.onReceive((data) => {
-          done();
-          expect(data.toString()).toBe("hello");
-        });
+    server.on("connection", (socket) => {
+      client.onReceive((data) => {
+        done();
+        expect(data.toString()).toBe("hello");
       });
+
+      socket.write(buildFrame(Buffer.from("hello")));
     });
+
+    client.connect(HOST, PORT);
   });
 
   test("should disconnect by server", (done) => {
-    client.connect(HOST, PORT).then(() => {
-      server.on("connection", (socket) => {
-        socket.end();
+    server.on("connection", (socket) => {
+      socket.end();
 
-        client.onDisconnect(() => {
-          done();
-        });
+      client.onDisconnect(() => {
+        done();
       });
     });
+
+    client.connect(HOST, PORT);
   });
 
   test("should disconnect by client", (done) => {
-    client.connect(HOST, PORT).then(() => {
-      server.on("connection", (socket) => {
-        client.close();
+    server.on("connection", (socket) => {
+      client.close();
 
-        socket.on("close", () => {
-          done();
-        });
+      socket.on("close", () => {
+        done();
       });
     });
+
+    client.connect(HOST, PORT);
   });
 });
 
