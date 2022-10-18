@@ -2,7 +2,7 @@ import { SocketServer } from "../../socket/types";
 import StringServerCommunicator from "./StringServerCommunicator";
 
 describe("StringServerCommunicator", () => {
-  describe("send to client", () => {
+  describe("send to all clients", () => {
     test('should send "LobbyInfo" command', () => {
       const { socketServer, serverSendAllFunction } = createMockSocketServer();
       const server = new StringServerCommunicator(socketServer);
@@ -24,6 +24,23 @@ describe("StringServerCommunicator", () => {
       expect(serverSendAllFunction).toBeCalledTimes(1);
       expect(serverSendAllFunction.mock.calls[0][0].toString("utf-8")).toEqual(
         '{"type":"lobbyInfo","data":{"adminId":"admin","players":[{"id":"p1id","nickname":"p1name"},{"id":"p2id","nickname":"p2name"}]}}',
+      );
+    });
+  });
+
+  describe("send to one client", () => {
+    test('should send "JoinError" command', () => {
+      const { socketServer, serverSendOneFunction } = createMockSocketServer();
+      const server = new StringServerCommunicator(socketServer);
+
+      server.sendOne("key", "joinError", {
+        message: "helloworld",
+      });
+
+      expect(serverSendOneFunction).toBeCalledTimes(1);
+      expect(serverSendOneFunction.mock.calls[0][0]).toBe("key");
+      expect(serverSendOneFunction.mock.calls[0][1].toString("utf-8")).toEqual(
+        '{"type":"joinError","data":{"message":"helloworld"}}',
       );
     });
   });

@@ -14,13 +14,15 @@ export default class StringServerCommunicator implements ServerCommunicator {
   }
 
   sendAll<K extends keyof ServerMessage>(type: K, data: ServerMessage[K]): void {
-    const packetData: StringBasedPacket = {
-      type,
-      data,
-    };
-    const packetString = JSON.stringify(packetData);
+    const serialized = this.serializeData(type, data);
 
-    this.server.sendAll(Buffer.from(packetString, "utf-8"));
+    this.server.sendAll(Buffer.from(serialized, "utf-8"));
+  }
+
+  sendOne<K extends keyof ServerMessage>(clientKey: string, type: K, data: ServerMessage[K]): void {
+    const serialized = this.serializeData(type, data);
+
+    this.server.sendOne(clientKey, Buffer.from(serialized, "utf-8"));
   }
 
   onReceive<K extends keyof ClientMessage>(
@@ -41,6 +43,15 @@ export default class StringServerCommunicator implements ServerCommunicator {
     }
 
     handler(clientId, data as ClientMessage[keyof ClientMessage]);
+  }
+
+  private serializeData(type: keyof ServerMessage, data: unknown) {
+    const packetData: StringBasedPacket = {
+      type,
+      data,
+    };
+    const packetString = JSON.stringify(packetData);
+    return packetString;
   }
 }
 
