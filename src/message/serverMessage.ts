@@ -41,6 +41,11 @@ export interface JoinError {
   message: string;
 }
 
+export interface JoinInfo {
+  playerId: string;
+  nickname: string;
+}
+
 export interface ServerMessage {
   lobbyInfo: LobbyInfo;
   gameTurnInfo: GameTurnInfo;
@@ -48,4 +53,5 @@ export interface ServerMessage {
   systemChat: SystemChat;
   gameResult: GameResult;
   joinError: JoinError;
+  joinInfo: JoinInfo;
 }
