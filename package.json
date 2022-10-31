@@ -15,7 +15,6 @@
     "lint": "run-s lint:*",
     "lint:eslint": "eslint --ignore-path .gitignore --resolve-plugins-relative-to . --fix .",
     "lint:prettier": "prettier --ignore-path .gitignore --write .",
-    "prepublish": "run-s clean build",
     "publish": "npm publish --access=public"
   },
   "devDependencies": {
