@@ -5,6 +5,7 @@ import { startGame } from "./clientencoder/startGame";
 import { gameResult } from "./serverencoder/gameResult";
 import { gameTurnInfo } from "./serverencoder/gameTurnInfo";
 import { lobbyInfo } from "./serverencoder/lobbyInfo";
+import { playerChat } from "./serverencoder/playerChat";
 
 export const clientEncoder = {
   join,
@@ -17,4 +18,5 @@ export const serverEncoder = {
   lobbyInfo,
   gameResult,
   gameTurnInfo,
+  playerChat,
 };
