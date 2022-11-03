@@ -11,6 +11,6 @@ export const join = {
   decode(buffer: Buffer): Join {
     const reader = new BinaryReader(buffer);
     const nickname = reader.readString();
-    return { nickname: nickname };
+    return { nickname };
   },
 };

@@ -11,6 +11,6 @@ export const sendChat = {
   decode(buffer: Buffer): SendChat {
     const reader = new BinaryReader(buffer);
     const content = reader.readString();
-    return { content: content };
+    return { content };
   },
 };
