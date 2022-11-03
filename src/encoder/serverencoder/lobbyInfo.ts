@@ -33,8 +33,8 @@ export const lobbyInfo = {
     }
 
     return {
-      players: players,
-      adminId: adminId,
+      players,
+      adminId,
     };
   },
 };
