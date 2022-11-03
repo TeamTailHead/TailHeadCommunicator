@@ -10,11 +10,11 @@ export const gameResult = {
     const playerCount = players.length;
 
     writer.writeInt32(playerCount);
-    for (let i = 0; i < playerCount; i++) {
-      writer.writeString(players[i].id);
-      writer.writeString(players[i].nickname);
-      writer.writeInt32(players[i].score);
-    }
+    players.forEach((player) => {
+      writer.writeString(player.id);
+      writer.writeString(player.nickname);
+      writer.writeInt32(player.score);
+    });
 
     return writer.toBuffer();
   },
@@ -33,7 +33,7 @@ export const gameResult = {
     }
 
     return {
-      players: players,
+      players,
     };
   },
 };

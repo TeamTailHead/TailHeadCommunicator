@@ -16,7 +16,7 @@ export const joinError = {
 
     const message = reader.readString();
     return {
-      message: message,
+      message,
     };
   },
 };

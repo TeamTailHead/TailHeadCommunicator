@@ -21,9 +21,9 @@ export const playerChat = {
     const content = reader.readString();
 
     return {
-      playerId: playerId,
-      nickname: nickname,
-      content: content,
+      playerId,
+      nickname,
+      content,
     };
   },
 };

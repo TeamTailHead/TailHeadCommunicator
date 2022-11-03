@@ -18,8 +18,8 @@ export const joinInfo = {
     const nickname = reader.readString();
 
     return {
-      playerId: playerId,
-      nickname: nickname,
+      playerId,
+      nickname,
     };
   },
 };
