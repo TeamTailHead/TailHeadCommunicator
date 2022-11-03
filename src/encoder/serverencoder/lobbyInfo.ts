@@ -11,10 +11,11 @@ export const lobbyInfo = {
 
     writer.writeString(data.adminId);
     writer.writeInt32(playerCount);
-    for (let i = 0; i < playerCount; i++) {
-      writer.writeString(players[i].id);
-      writer.writeString(players[i].nickname);
-    }
+
+    players.forEach((player) => {
+      writer.writeString(player.id);
+      writer.writeString(player.nickname);
+    });
 
     return writer.toBuffer();
   },

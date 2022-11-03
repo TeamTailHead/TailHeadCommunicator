@@ -39,7 +39,11 @@ describe("lobbyInfo", () => {
     test("should decode encoded", () => {
       const data = {
         adminId: "aaaa",
-        players: [{ id: "bbb", nickname: "cc" }],
+        players: [
+          { id: "bbb", nickname: "cc" },
+          { id: "ddddd", nickname: "eee" },
+          { id: "ff", nickname: "ggggg" },
+        ],
       };
 
       const buffer = lobbyInfo.encode(data);

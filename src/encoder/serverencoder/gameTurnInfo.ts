@@ -11,11 +11,12 @@ export const gameTurnInfo = {
     writer.writeInt32(data.turnSequence);
 
     writer.writeInt32(playerCount);
-    for (let i = 0; i < playerCount; i++) {
-      writer.writeString(players[i].id);
-      writer.writeString(players[i].nickname);
-      writer.writeInt32(players[i].score);
-    }
+    players.forEach((player) => {
+      writer.writeString(player.id);
+      writer.writeString(player.nickname);
+      writer.writeInt32(player.score);
+    });
+
     writer.writeString(data.currentPlayerId);
     writer.writeString(data.lastWord);
 
@@ -42,11 +43,11 @@ export const gameTurnInfo = {
     const deadline = new Date(reader.readString());
 
     return {
-      turnSequence: turnSequence,
-      players: players,
-      currentPlayerId: currentPlayerId,
-      lastWord: lastWord,
-      deadline: deadline,
+      turnSequence,
+      players,
+      currentPlayerId,
+      lastWord,
+      deadline,
     };
   },
 };
