@@ -4,8 +4,10 @@ import { sendChat } from "./clientencoder/sendChat";
 import { startGame } from "./clientencoder/startGame";
 import { gameResult } from "./serverencoder/gameResult";
 import { gameTurnInfo } from "./serverencoder/gameTurnInfo";
+import { joinError } from "./serverencoder/joinError";
 import { lobbyInfo } from "./serverencoder/lobbyInfo";
 import { playerChat } from "./serverencoder/playerChat";
+import { systemChat } from "./serverencoder/systemChat";
 
 export const clientEncoder = {
   join,
@@ -19,4 +21,6 @@ export const serverEncoder = {
   gameResult,
   gameTurnInfo,
   playerChat,
+  systemChat,
+  joinError,
 };
