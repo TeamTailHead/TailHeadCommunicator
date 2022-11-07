@@ -8,10 +8,9 @@ export const systemChat = {
 
     const { level, content } = data;
 
-    let levelNo;
-    if (level == "info") levelNo = 1;
-    else if (level == "warning") levelNo = 2;
-    else levelNo = 3;
+    const levels: Array<SystemChat["level"]> = ["info", "error", "warning"];
+
+    const levelNo = levels.indexOf(level);
 
     writer.writeInt8(levelNo);
     writer.writeString(content);
@@ -23,11 +22,9 @@ export const systemChat = {
 
     const levelNo = reader.readInt8();
     const content = reader.readString();
+    const levels: Array<SystemChat["level"]> = ["info", "error", "warning"];
 
-    let level: SystemChat["level"];
-    if (levelNo == 1) level = "info";
-    else if (levelNo == 2) level = "warning";
-    else level = "error";
+    const level = levels[levelNo];
 
     return {
       level,

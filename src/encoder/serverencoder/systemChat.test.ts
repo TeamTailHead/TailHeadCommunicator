@@ -10,7 +10,7 @@ describe("encode systemCaht", () => {
       };
 
       const buffer = systemChat.encode(data);
-      expect(buffer).toEqual(Buffer.from([1, 12, 0, 0, 0, 99, 111, 114, 114, 101, 99, 116, 32, 105, 110, 102, 111]));
+      expect(buffer).toEqual(Buffer.from([0, 12, 0, 0, 0, 99, 111, 114, 114, 101, 99, 116, 32, 105, 110, 102, 111]));
     });
 
     test("encode systemChat error", () => {
@@ -19,7 +19,7 @@ describe("encode systemCaht", () => {
         content: "error info",
       };
       const buffer = systemChat.encode(data);
-      expect(buffer).toEqual(Buffer.from([3, 10, 0, 0, 0, 101, 114, 114, 111, 114, 32, 105, 110, 102, 111]));
+      expect(buffer).toEqual(Buffer.from([1, 10, 0, 0, 0, 101, 114, 114, 111, 114, 32, 105, 110, 102, 111]));
     });
   });
   describe("decode systemChat method", () => {
