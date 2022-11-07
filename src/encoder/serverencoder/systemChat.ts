@@ -2,13 +2,13 @@ import BinaryReader from "../../binary/BinaryReader";
 import BinaryWriter from "../../binary/BinaryWriter";
 import { SystemChat } from "../../message/serverMessage";
 
+const levels: Array<SystemChat["level"]> = ["info", "error", "warning"];
+
 export const systemChat = {
   encode(data: SystemChat): Buffer {
     const writer = new BinaryWriter();
 
     const { level, content } = data;
-
-    const levels: Array<SystemChat["level"]> = ["info", "error", "warning"];
 
     const levelNo = levels.indexOf(level);
 
@@ -22,7 +22,6 @@ export const systemChat = {
 
     const levelNo = reader.readInt8();
     const content = reader.readString();
-    const levels: Array<SystemChat["level"]> = ["info", "error", "warning"];
 
     const level = levels[levelNo];
 
