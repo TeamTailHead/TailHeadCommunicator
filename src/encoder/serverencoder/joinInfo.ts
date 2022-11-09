@@ -1,29 +1,25 @@
 import BinaryReader from "../../binary/BinaryReader";
 import BinaryWriter from "../../binary/BinaryWriter";
-import { PlayerChat } from "../../message/serverMessage";
+import { JoinInfo } from "../../message/serverMessage";
 
-export const playerChat = {
-  encode(data: PlayerChat): Buffer {
+export const joinInfo = {
+  encode(data: JoinInfo): Buffer {
     const writer = new BinaryWriter();
+    const { playerId, nickname } = data;
 
-    const { playerId, nickname, content } = data;
     writer.writeString(playerId);
     writer.writeString(nickname);
-    writer.writeString(content);
-
     return writer.toBuffer();
   },
-  decode(buffer: Buffer): PlayerChat {
+  decode(buffer: Buffer): JoinInfo {
     const reader = new BinaryReader(buffer);
 
     const playerId = reader.readString();
     const nickname = reader.readString();
-    const content = reader.readString();
 
     return {
       playerId,
       nickname,
-      content,
     };
   },
 };
