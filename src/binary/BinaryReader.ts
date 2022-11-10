@@ -31,4 +31,8 @@ export default class BinaryReader {
     this.offset += length;
     return value;
   }
+
+  getOffset(): number {
+    return this.offset;
+  }
 }

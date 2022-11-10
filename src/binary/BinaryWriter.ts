@@ -34,6 +34,10 @@ export default class BinaryWriter {
     this.offset += length;
   }
 
+  writeBuffer(buffer: Buffer): void {
+    this.buffers.push(buffer);
+  }
+
   toBuffer(): Buffer {
     let totalLength = 0;
     for (let i = 0; i < this.buffers.length; i++) {
