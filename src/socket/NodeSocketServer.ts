@@ -23,7 +23,7 @@ export default class NodeSocketServer implements SocketServer {
 
   async start(port: number): Promise<void> {
     return new Promise((resolve) => {
-      this.server.listen(port, "0.0.0.0", resolve);
+      this.server.listen(port, undefined, resolve);
     });
   }
 
