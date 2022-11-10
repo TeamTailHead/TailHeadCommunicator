@@ -8,16 +8,13 @@ type ConnectHandler = () => void;
 type DisconnectHandler = () => void;
 
 export default class NodeSocketClient implements SocketClient {
-  private socket: Socket;
   private reader: FrameReader;
 
   private receiveHandler: ReceiveHandler | undefined;
   private connectHandler: ConnectHandler | undefined;
   private disconnectHandler: DisconnectHandler | undefined;
 
-  constructor() {
-    this.socket = new Socket();
-
+  constructor(private socket: Socket = new Socket()) {
     this.socket.on("connect", () => {
       this.connectHandler?.();
     });
