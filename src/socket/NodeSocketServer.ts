@@ -16,9 +16,9 @@ export default class NodeSocketServer implements SocketServer {
   private disconnectHandler: DisconnectCallback | undefined;
   private connectHandler: ConnectCallback | undefined;
 
-  constructor() {
+  constructor(config?: { timeout?: number }) {
     this.server = createServer();
-    this.server.on("connection", (socket) => this.handleClientConnection(socket));
+    this.server.on("connection", (socket) => this.handleClientConnection(socket, config?.timeout ?? 0));
   }
 
   async start(port: number): Promise<void> {
@@ -62,12 +62,14 @@ export default class NodeSocketServer implements SocketServer {
     this.disconnectHandler = handler;
   }
 
-  private handleClientConnection(socket: Socket) {
+  private handleClientConnection(socket: Socket, timeout: number) {
     const id = nanoid();
     const frameReader = new FrameReader();
 
     this.idToSocket.set(id, socket);
     this.connectHandler?.(id);
+
+    socket.setTimeout(timeout);
 
     socket.on("data", (data) => {
       frameReader.push(data);
